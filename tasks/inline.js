@@ -122,21 +122,10 @@ module.exports = function(grunt) {
 					var styleSheetContent = grunt.file.read( inlineFilePath );
 					
 					styleSheetContent = styleSheetContent.replace(/url\(([^)]+)\)/g, function(matchedWord, imgUrl){
-						var imgUrlRelativeToParentFile = imgUrl;
-						if(isRemotePath(imgUrl)){
-							// return matchedWord;
-						}else{
-							console.log( 'filepath: '+ filepath);
-							console.log( 'imgUrl: '+imgUrl);
-							console.log( 'inlineFilePath: '+inlineFilePath);
-							var absoluteImgurl = path.resolve( path.dirname(inlineFilePath),imgUrl );
-							console.log( 'absoluteImgurl: '+absoluteImgurl);
-							imgUrlRelativeToParentFile = path.relative( path.dirname(filepath), absoluteImgurl );
-							console.log( 'imgUrlRelativeToParentFile: '+imgUrlRelativeToParentFile);
-						}
-						// console.log('imgUrlRelativeToParentFile: '+imgUrlRelativeToParentFile);
-						return matchedWord.replace(imgUrl, imgUrlRelativeToParentFile);
+						var absoluteImgurl = path.resolve(path.dirname(inlineFilePath), imgUrl);
+						return matchedWord.replace(imgUrl, 'data:image/png;base64' + (new datauri(absoluteImgurl)).content);
 					});
+
 					styleSheetContent = options.cssmin ? CleanCSS.process(styleSheetContent) : styleSheetContent;
 					ret = '<style>\n' + styleSheetContent + '\n</style>';
 
