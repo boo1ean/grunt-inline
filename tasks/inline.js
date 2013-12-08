@@ -123,7 +123,7 @@ module.exports = function(grunt) {
 					
 					styleSheetContent = styleSheetContent.replace(/url\(([^)]+)\)/g, function(matchedWord, imgUrl){
 						var absoluteImgurl = path.resolve(path.dirname(inlineFilePath), imgUrl);
-						return matchedWord.replace(imgUrl, 'data:image/png;base64' + (new datauri(absoluteImgurl)).content);
+						return matchedWord.replace(imgUrl, (new datauri(absoluteImgurl)).content);
 					});
 
 					styleSheetContent = options.cssmin ? CleanCSS.process(styleSheetContent) : styleSheetContent;
@@ -146,7 +146,7 @@ module.exports = function(grunt) {
 				grunt.log.writeln('inline > inline img，src = ' + src, ', 实际路径： ' + inlineFilePath);
 
 				if( grunt.file.exists(inlineFilePath) ){
-					ret = matchedWord.replace(src, 'data:image/png;base64'+(new datauri(inlineFilePath)).content);
+					ret = matchedWord.replace(src, (new datauri(inlineFilePath)).content);
 				}else{
 					grunt.log.error('inline > '+inlineFilePath + ' 不存在！');
 				}
